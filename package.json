@@ -1,19 +1,19 @@
 {
-	"name": "async-iter-dedupe",
+	"name": "async-iter-watch",
 	"version": "1.0.0",
 	"description": "",
-	"main": "async-iter-dedupe.js",
+	"main": "watch.js",
 	"scripts": {
 		"test": "./.test/index.js"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://archive.voodoowarez.com/async-iter-dedupe"
+		"url": "https://archive.voodoowarez.com/async-iter-watch"
 	},
 	"keywords": [],
 	"author": "jauntywunderkind",
 	"license": "MIT",
-	"module": "async-iter-dedupe.js",
+	"module": "watch.js",
 	"esm": true,
 	"type": "module",
 	"dependencies": {
