@@ -1,54 +1,26 @@
-import Map, { DropItem} from "async-iter-map"
+import Dedupe from "async-iter-dedupe"
+import Interval from "async-iter-interval"
 
-export function AsyncIterDedupe( opt= {}){
-	const { isEqual, map: innerMap, ...rest}= opt
-	Map.call( this, rest)
-	Object.defineProperties( this, {
-		innerMap: {
-			value: innerMap,
-			writable: true
-		},
-		...(isEqual&& { isEqual: {
-			value: isEqual,
-			writable: true
-		}}),
-		state: {
-			value: undefined,
-			writable: true
-		}
-	})
+/**
+* On every `input`, run `fn`
+*/
+export function AsyncIterWatch({ fn: map, ms= 1000, ...rest}= {}){
+	if( !rest.input){
+		const signal= rest.signal
+		rest.input= new Interval( ms,{ signal})
+	}
+	if( map){
+		rest.map= map
+	}
+	Dedupe.call( this, rest)
 	return this
 }
 export {
-	AsyncIterDedupe as default,
-	AsyncIterDedupe as asyncIterDedupe,
-	AsyncIterDedupe as dedupe,
-	AsyncIterDedupe as Dedupe
+	AsyncIterWatch as default,
+	AsyncIterWatch as asyncIterWatch,
+	AsyncIterWatch as watch,
+	AsyncIterWatch as Watch
 }
-AsyncIterDedupe.prototype= Object.create( Map.prototype, {
-	map: {
-		get: function(){
-			return this.outerMap
-		},
-		set: function( innerMap){
-			this.innerMap= innerMap
-		}
-	},
-	outerMap: {
-		value: function map( item){
-			if( this.innerMap){
-				item= this.innerMap( item)
-			}
-			if( this.isEqual( item, this.state)){
-				return DropItem
-			}
-			this.state= item
-			return item
-		},
-	},
-	isEqual: {
-		value: function( a, b){
-			return a=== b
-		}
-	}
+AsyncIterWatch.prototype= Object.create( Dedupe.prototype, {
 })
+AsyncIterWatch.prototype.constructor= AsyncIterWatch
